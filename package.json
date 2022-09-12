@@ -1,0 +1,38 @@
+{
+    "name": "Project Desing",
+    "version": "1.0.0",
+    "description": "NodeJS project desing",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/YishayRE/NodeJSDesing.git"
+    },
+    "keywords": [
+        "NodeJS",
+        "Express.js",
+        "REST",
+        "Server",
+        "API"
+    ],
+    "author": "YishayRE",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/YishayRE/QLDB_Example/issues"
+    },
+    "homepage": "https://github.com/YishayRE/QLDB_Example#readme",
+    "dependencies": {
+        "amazon-qldb-driver-nodejs": "^2.2.0",
+        "aws-sdk": "^2.1212.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "express-fileupload": "^1.4.0",
+        "express-validator": "^6.14.2",
+        "ion-js": "^4.3.0",
+        "jsbi": "^3.2.5"
+    }
+}
