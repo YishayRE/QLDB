@@ -13,7 +13,8 @@ class Server {
         this.server = createServer(this.app);
 
         this.paths = {
-            example: '/api/example'
+            example: '/api/example',
+            materiales: '/api/materiales'
         }
 
         // Conectar a base de datos
@@ -60,6 +61,7 @@ class Server {
 
     routes() {
         this.app.use(this.paths.example, routes.examples);
+        this.app.use(this.paths.materiales, routes.materiales);
     }
 
     crons() {

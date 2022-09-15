@@ -19,9 +19,16 @@ class QLDB {
         });
     }
 
-    async transaccionParams(transaccion, params) {
+    async transaccionParamsArray(transaccion, array) {
         return await this.qldbDriver.executeLambda(async(txn) => {
-            const respuesta = await txn.execute(transaccion, ...params);
+            const respuesta = await txn.execute(transaccion, ...array);
+            return respuesta;
+        });
+    }
+
+    async transaccionParamsObj(transaccion, obj) {
+        return await this.qldbDriver.executeLambda(async(txn) => {
+            const respuesta = await txn.execute(transaccion, obj);
             return respuesta;
         });
     }
