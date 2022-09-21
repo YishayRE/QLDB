@@ -16,7 +16,50 @@ const obtenerHistorico = async(req = request, res = response) => {
     
         if(resp.getResultList().length > 0) {
             const respuesta = JSON.parse(JSON.stringify(resp.getResultList(), null, 2));
-    
+/*
+            const amChart = [];
+            amChart.push({
+                "name": respuesta[0].metadata.id,
+                "valorPropio": "Id de bloque",
+                "value": 1,
+                "children":
+                    respuesta.map(respQLDB => {
+                        return {
+                            "name": `Versión`, 
+                            "valorPropio": respQLDB.metadata.version,
+                            "value": 0.75,
+                            "collapsed": false,
+                            "children": [
+                                {
+                                "name": "Nombre",
+                                "value": 0.5,
+                                "valorPropio": respQLDB.data.Nombre
+                                },
+                                {
+                                "name": "Fecha de Recolección",
+                                "value": 0.5,
+                                "valorPropio": respQLDB.data.FechaRecoleccion
+                                },
+                                {
+                                "name": "Cantidad",
+                                "value": 0.5,
+                                "valorPropio": respQLDB.data.Cantidad
+                                },
+                                {
+                                "name": "Origen",
+                                "value": 0.5,
+                                "valorPropio": respQLDB.data.Origen
+                                },
+                                {
+                                "name": "Lote",
+                                "value": 0.5,
+                                "valorPropio": respQLDB.data.Lote
+                                }
+                            ]
+                        }
+                    })
+            });
+            */
             res.status(200).json({
                 respuesta
             });
@@ -71,7 +114,7 @@ const obtenerMateriales = async(req = request, res = response) => {
     try{
         const qldb = new QLDB();
         const tablas = qldb.transaccion("SELECT * FROM _ql_committed_Material;");
-    
+        
         const resp = await tablas;
     
         if(resp.getResultList().length > 0) {
@@ -105,6 +148,8 @@ const crearMaterial = async(req = request, res = response) => {
         const body = req.body;
         let tablas;
         
+        console.log(body);
+/*
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Material ?;", body);
         else
@@ -124,7 +169,7 @@ const crearMaterial = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else 
+        else */
             throw new Error('No hay datos');
     }
     catch(error) {
