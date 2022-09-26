@@ -31,7 +31,6 @@ const obtenerHistoria = async(req = request, res = response) => {
         
         if(respT.getResultList().length > 0)
             respuestaT = JSON.parse(JSON.stringify(respT.getResultList(), null, 2));
-        console.log(respuestaT);
 
         //produccion
         if(respuestaM[0].data._idProduccion)
