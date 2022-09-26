@@ -9,9 +9,10 @@ const router = Router();
  */
 
 //  Route example
+router.get('/historia/', materiales.obtenerHistoria);
+router.get('/historico/', materiales.obtenerHistorico);
 router.get('/unico/', materiales.obtenerMaterial);
 router.get('/', materiales.obtenerMateriales);
-router.get('/historico/', materiales.obtenerHistorico);
 
 router.post('/', materiales.crearMaterial);
 

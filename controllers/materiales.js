@@ -1,6 +1,63 @@
 import { response, request } from 'express';
 import QLDB from '../database/config.js';
 
+const obtenerHistoria = async(req = request, res = response) => {
+    try{
+        const qldb = new QLDB();
+        const head = req.headers.id;
+        let material;
+        let produccion;
+        let transporte;
+
+        //material
+        if(head)
+            material = qldb.transaccionParamsArray("SELECT * FROM _ql_committed_Material WHERE metadata.id = ?;", [head]);
+        else
+            throw new Error('No hay id de material');
+        
+        const respM = await material;
+        let respuestaM;
+        
+        if(respM.getResultList().length > 0)
+            respuestaM = JSON.parse(JSON.stringify(respM.getResultList(), null, 2));
+        else 
+            throw new Error('No hay datos');
+
+        //transporte
+        transporte = qldb.transaccionParamsArray("SELECT * FROM _ql_committed_Transporte WHERE data._idMaterial = ?;", [respuestaM[0].metadata.id]);
+        
+        const respT = await transporte;
+        let respuestaT;
+        
+        if(respT.getResultList().length > 0)
+            respuestaT = JSON.parse(JSON.stringify(respT.getResultList(), null, 2));
+        console.log(respuestaT);
+
+        //produccion
+        if(respuestaM[0].data._idProduccion)
+            produccion = qldb.transaccionParamsArray("SELECT * FROM _ql_committed_Produccion WHERE metadata.id = ?;", [respuestaM[0].data._idProduccion]);
+        
+        const respP = await produccion;
+        let respuestaP;
+        
+        if(respP.getResultList().length > 0)
+            respuestaP = JSON.parse(JSON.stringify(respP.getResultList(), null, 2));
+            
+        res.status(200).json({
+            material: respuestaM[0],
+            transporte: respuestaT[0],
+            produccion: respuestaP[0]
+        });
+    }
+    catch(error) {
+        console.log(error);
+        
+        res.status(404).json({
+            msg: error.message
+        });
+    }
+};
+
 const obtenerHistorico = async(req = request, res = response) => {
     try{
         const qldb = new QLDB();
@@ -16,50 +73,7 @@ const obtenerHistorico = async(req = request, res = response) => {
     
         if(resp.getResultList().length > 0) {
             const respuesta = JSON.parse(JSON.stringify(resp.getResultList(), null, 2));
-/*
-            const amChart = [];
-            amChart.push({
-                "name": respuesta[0].metadata.id,
-                "valorPropio": "Id de bloque",
-                "value": 1,
-                "children":
-                    respuesta.map(respQLDB => {
-                        return {
-                            "name": `Versión`, 
-                            "valorPropio": respQLDB.metadata.version,
-                            "value": 0.75,
-                            "collapsed": false,
-                            "children": [
-                                {
-                                "name": "Nombre",
-                                "value": 0.5,
-                                "valorPropio": respQLDB.data.Nombre
-                                },
-                                {
-                                "name": "Fecha de Recolección",
-                                "value": 0.5,
-                                "valorPropio": respQLDB.data.FechaRecoleccion
-                                },
-                                {
-                                "name": "Cantidad",
-                                "value": 0.5,
-                                "valorPropio": respQLDB.data.Cantidad
-                                },
-                                {
-                                "name": "Origen",
-                                "value": 0.5,
-                                "valorPropio": respQLDB.data.Origen
-                                },
-                                {
-                                "name": "Lote",
-                                "value": 0.5,
-                                "valorPropio": respQLDB.data.Lote
-                                }
-                            ]
-                        }
-                    })
-            });
-            */
+            
             res.status(200).json({
                 respuesta
             });
@@ -250,6 +264,7 @@ const example = async(req = request, res = response) => {
 };
 
 export {
+    obtenerHistoria,
     obtenerHistorico,
     obtenerMaterial,
     obtenerMateriales,
