@@ -1,9 +1,10 @@
-version: 0.2
+version: 1
 
 phases:
   pre-build:
-    - echo Installing source NPM dependencies...
-    - npm install
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm install
   build:
     commands:
       - echo Start Building
@@ -14,3 +15,6 @@ phases:
 artifacts:
   files:
     - /**/*
+cache:
+  paths:
+    - node_modules/**/*
