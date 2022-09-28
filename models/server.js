@@ -14,8 +14,11 @@ class Server {
 
         this.paths = {
             example: '/api/example',
+            distribuciones: '/api/distribuciones',
+            distribuidores: '/api/distribuidores',
             materiales: '/api/materiales',
             producciones: '/api/producciones',
+            tequila: '/api/tequilas',
             transportes: '/api/transportes'
         }
 
@@ -63,8 +66,11 @@ class Server {
 
     routes() {
         this.app.use(this.paths.example, routes.examples);
+        this.app.use(this.paths.distribuciones, routes.distribuciones);
+        this.app.use(this.paths.distribuidores, routes.distribuidores);
         this.app.use(this.paths.materiales, routes.materiales);
         this.app.use(this.paths.producciones, routes.producciones);
+        this.app.use(this.paths.tequila, routes.tequilas);
         this.app.use(this.paths.transportes, routes.transportes);
     }
 

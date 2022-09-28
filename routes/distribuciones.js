@@ -1,18 +1,18 @@
 import { Router } from 'express';
 
-import { tequilas } from '../controllers/index.js';
+import { distribuciones } from '../controllers/index.js';
 
 const router = Router();
 
 /**
- * {{url}}/api/tequilas
+ * {{url}}/api/distribuciones
  */
 
 //  Route example
-router.get('/historico/', tequilas.obtenerHistorico);
-router.get('/unico/', tequilas.obtenerTequila);
-router.get('/', tequilas.obtenerTequilas);
+router.get('/historico/', distribuciones.obtenerHistorico);
+router.get('/unico/', distribuciones.obtenerDistribucion);
+router.get('/', distribuciones.obtenerDistribuciones);
 
-router.post('/', tequilas.crearTequila);
+router.post('/', distribuciones.crearDistribucion);
 
 export { router };
