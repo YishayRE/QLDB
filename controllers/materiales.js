@@ -162,7 +162,7 @@ const crearMaterial = async(req = request, res = response) => {
         let tablas;
         
         console.log(body);
-/*
+        
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Material ?;", body);
         else
@@ -182,7 +182,7 @@ const crearMaterial = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else 
             throw new Error('No hay datos');
     }
     catch(error) {

@@ -10,7 +10,7 @@ const obtenerHistorico = async(req = request, res = response) => {
         if(head)
             tablas = qldb.transaccionParamsArray("SELECT * FROM history( Distribucion ) WHERE metadata.id = ?;", [head]);
         else
-            throw new Error('No hay id de material');
+            throw new Error('No hay id de distribución');
         
         const resp = await tablas;
         
@@ -70,7 +70,7 @@ const obtenerDistribucion = async(req = request, res = response) => {
 const obtenerDistribuciones = async(req = request, res = response) => {
     try{
         const qldb = new QLDB();
-        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.fechaInicio, t.data.fechaFin, t.data.idProduccion FROM _ql_committed_Distribucion AS t");
+        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.fechaInicio, t.data.fechaFin, t.data.idProduccion, t.data.idDistribucion FROM _ql_committed_Distribucion AS t");
         
         const resp = await tablas;
         let respuesta = [];
@@ -81,9 +81,9 @@ const obtenerDistribuciones = async(req = request, res = response) => {
             throw new Error('No hay datos');
         
         const distribuciones = respuesta.map(async(trans) => {
-            const material = qldb.transaccionParamsArray("SELECT m.data.Nombre FROM _ql_committed_Material AS m WHERE m.metadata.id = ?", [trans._idMaterial]);
+            const produccion = qldb.transaccionParamsArray("SELECT m.data.lugarProduccion FROM _ql_committed_Produccion AS m WHERE m.metadata.id = ?", [trans.idProduccion]);
         
-            const respM = await material;
+            const respM = await produccion;
             let respuestaM = [];
         
             if(respM.getResultList().length === 1)
@@ -93,7 +93,7 @@ const obtenerDistribuciones = async(req = request, res = response) => {
 
             return {
                 ...trans,
-                Nombre: respuestaM[0].Nombre
+                lugarProduccion: respuestaM[0].lugarProduccion
             }
         });
 
@@ -118,8 +118,6 @@ const crearDistribucion = async(req = request, res = response) => {
         const body = req.body;
         let tablas;
         
-        console.log(body);
-/*
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Distribucion ?;", body);
         else
@@ -139,7 +137,7 @@ const crearDistribucion = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else
             throw new Error('No hay datos');
     }
     catch(error) {

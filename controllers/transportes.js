@@ -117,9 +117,7 @@ const crearTransporte = async(req = request, res = response) => {
         const qldb = new QLDB();
         const body = req.body;
         let tablas;
-        
-        console.log(body);
-/*
+
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Transporte ?;", body);
         else
@@ -139,7 +137,7 @@ const crearTransporte = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else
             throw new Error('No hay datos');
     }
     catch(error) {

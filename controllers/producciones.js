@@ -103,8 +103,6 @@ const crearProduccion = async(req = request, res = response) => {
         const body = req.body;
         let tablas;
         
-        console.log(body);
-/*
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Produccion ?;", body);
         else
@@ -124,7 +122,7 @@ const crearProduccion = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else
             throw new Error('No hay datos');
     }
     catch(error) {

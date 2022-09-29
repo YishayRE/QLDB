@@ -70,7 +70,7 @@ const obtenerTequila = async(req = request, res = response) => {
 const obtenerTequilas = async(req = request, res = response) => {
     try{
         const qldb = new QLDB();
-        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.idTequila, t.data.origen, t.data.destino, t.data.fechaInicio, t.data.fechaFin, t.data._idMaterial FROM _ql_committed_Tequila AS t");
+        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.lote, t.data.idDistribuidor FROM _ql_committed_Tequila AS t");
         
         const resp = await tablas;
         let respuesta = [];
@@ -81,7 +81,7 @@ const obtenerTequilas = async(req = request, res = response) => {
             throw new Error('No hay datos');
         
         const tequilas = respuesta.map(async(trans) => {
-            const material = qldb.transaccionParamsArray("SELECT m.data.Nombre FROM _ql_committed_Material AS m WHERE m.metadata.id = ?", [trans._idMaterial]);
+            const material = qldb.transaccionParamsArray("SELECT m.data.nombre, m.data.lugar, p.data.lugarProduccion FROM _ql_committed_Distribuidor AS m INNER JOIN _ql_committed_Distribucion AS d ON d.metadata.id = m.data.idDistribucion INNER JOIN _ql_committed_Produccion AS p ON p.metadata.id = d.data.idProduccion WHERE m.metadata.id = ?;", [trans.idDistribuidor]);
         
             const respM = await material;
             let respuestaM = [];
@@ -93,7 +93,9 @@ const obtenerTequilas = async(req = request, res = response) => {
 
             return {
                 ...trans,
-                Nombre: respuestaM[0].Nombre
+                nombre: respuestaM[0].nombre,
+                lugar: respuestaM[0].lugar,
+                lugarProduccion: respuestaM[0].lugarProduccion
             }
         });
 
@@ -118,8 +120,6 @@ const crearTequila = async(req = request, res = response) => {
         const body = req.body;
         let tablas;
         
-        console.log(body);
-/*
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Tequila ?;", body);
         else
@@ -139,7 +139,7 @@ const crearTequila = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else
             throw new Error('No hay datos');
     }
     catch(error) {

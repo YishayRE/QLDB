@@ -70,7 +70,7 @@ const obtenerDistribuidor = async(req = request, res = response) => {
 const obtenerDistribuidores = async(req = request, res = response) => {
     try{
         const qldb = new QLDB();
-        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.idDistribuidor, t.data.origen, t.data.destino, t.data.fechaInicio, t.data.fechaFin, t.data._idMaterial FROM _ql_committed_Distribuidor AS t");
+        const tablas = qldb.transaccion("SELECT t.metadata.id, t.data.lugar, t.data.nombre, t.data.idDistribuidor, t.data.idDistribucion FROM _ql_committed_Distribuidor AS t");
         
         const resp = await tablas;
         let respuesta = [];
@@ -81,9 +81,9 @@ const obtenerDistribuidores = async(req = request, res = response) => {
             throw new Error('No hay datos');
         
         const distribuidores = respuesta.map(async(trans) => {
-            const material = qldb.transaccionParamsArray("SELECT m.data.Nombre FROM _ql_committed_Material AS m WHERE m.metadata.id = ?", [trans._idMaterial]);
+            const distribucion = qldb.transaccionParamsArray("SELECT m.data.idDistribucion FROM _ql_committed_Distribucion AS m WHERE m.metadata.id = ?", [trans.idDistribucion]);
         
-            const respM = await material;
+            const respM = await distribucion;
             let respuestaM = [];
         
             if(respM.getResultList().length === 1)
@@ -93,7 +93,7 @@ const obtenerDistribuidores = async(req = request, res = response) => {
 
             return {
                 ...trans,
-                Nombre: respuestaM[0].Nombre
+                nDistribucion: respuestaM[0].idDistribucion
             }
         });
 
@@ -118,8 +118,6 @@ const crearDistribuidor = async(req = request, res = response) => {
         const body = req.body;
         let tablas;
         
-        console.log(body);
-/*
         if(body)
             tablas = qldb.transaccionParamsObj("INSERT INTO Distribuidor ?;", body);
         else
@@ -139,7 +137,7 @@ const crearDistribuidor = async(req = request, res = response) => {
                 respuesta: respuestaData
             });
         }
-        else */
+        else
             throw new Error('No hay datos');
     }
     catch(error) {
