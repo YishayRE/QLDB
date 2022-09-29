@@ -8,6 +8,9 @@ const obtenerHistoria = async(req = request, res = response) => {
         let material;
         let produccion;
         let transporte;
+        let distribucion;
+        let distribuidor;
+        let tequila;
 
         //material
         if(head)
@@ -42,10 +45,43 @@ const obtenerHistoria = async(req = request, res = response) => {
         if(respP.getResultList().length > 0)
             respuestaP = JSON.parse(JSON.stringify(respP.getResultList(), null, 2));
             
+        //Distribución
+        if(respuestaP[0].metadata.id)
+            distribucion = qldb.transaccionParamsArray("SELECT * FROM _ql_committed_Distribucion WHERE data.idProduccion = ? AND data.idDistribucion = '1';", [respuestaP[0].metadata.id]);
+    
+        const respDn = await distribucion;
+        let respuestaDn;
+        
+        if(respDn.getResultList().length > 0)
+            respuestaDn = JSON.parse(JSON.stringify(respDn.getResultList(), null, 2));
+
+        //Distribuidor
+        if(respuestaDn[0].metadata.id)
+            distribuidor = qldb.transaccionParamsArray("select * from _ql_committed_Distribuidor where data.idDistribucion = ?;", [respuestaDn[0].metadata.id]);
+    
+        const respDr = await distribuidor;
+        let respuestaDr;
+        
+        if(respDr.getResultList().length > 0)
+            respuestaDr = JSON.parse(JSON.stringify(respDr.getResultList(), null, 2));
+
+        //Tequila
+        if(respuestaDr[0].metadata.id)
+            tequila = qldb.transaccionParamsArray("select * from _ql_committed_Tequila where data.idDistribuidor = ?;", [respuestaDr[0].metadata.id]);
+    
+        const respTq = await tequila;
+        let respuestaTq;
+        
+        if(respTq.getResultList().length > 0)
+            respuestaTq = JSON.parse(JSON.stringify(respTq.getResultList(), null, 2));
+
         res.status(200).json({
             material: respuestaM[0],
             transporte: respuestaT[0],
-            produccion: respuestaP[0]
+            produccion: respuestaP[0],
+            distribucion: respuestaDn[0],
+            distribuidor: respuestaDr[0],
+            tequila: respuestaTq[0]
         });
     }
     catch(error) {
